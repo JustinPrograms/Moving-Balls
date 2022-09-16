@@ -18,6 +18,8 @@ public:
 	Ball(const sf::RenderWindow& window);
 	~Ball();
 
+	const sf::CircleShape getShape();
+
 	void update();
 	void render(sf::RenderTarget& target);
 };

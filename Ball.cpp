@@ -21,7 +21,12 @@ Ball::~Ball() {
 
 }
 
+const sf::CircleShape Ball::getShape() {
+	return this->shape;
+}
+
 void Ball::update() {
+
 }
 
 void Ball::render(sf::RenderTarget& target) {
