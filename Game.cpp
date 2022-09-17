@@ -91,16 +91,21 @@ void Game::spawnBalls() {
 	}
 }
 
-const int Game::randBallType() const {
+const int Game::randBallType() {
 
 	int type = BallTypes::DEFAULT;
 	int randValue = rand() % 100 + 1;
 
-	if (randValue >= 60 && randValue <= 80)
-		type = BallTypes::DAMAGING;
+	std::cout << randValue << std::endl;
 
-	else if (randValue > 80 && randValue <= 100)
+	if (randValue >= 60 && randValue <= 80) {
+		// std::cout << "Im here" << std::endl;
+		type = BallTypes::DAMAGING;
+	}
+
+	else if (randValue > 80 && randValue <= 100) {
 		type = BallTypes::HEALING;
+	}
 
 	return 0;
 }

@@ -1,5 +1,4 @@
 #include "Ball.h"
-#include <iostream>
 
 void Ball::initShape(const sf::RenderWindow& window) {
 

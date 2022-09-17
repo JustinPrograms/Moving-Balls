@@ -59,7 +59,7 @@ public:
 	void pollEvents();
 
 	void spawnBalls();
-	const int randBallType() const;
+	const int randBallType();
 	void updatePlayer();
 	void updateCollision();
 	void updateGui();
