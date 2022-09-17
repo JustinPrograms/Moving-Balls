@@ -26,6 +26,15 @@ void Game::initText() {
 	this->guiText.setFillColor(sf::Color::White);
 	this->guiText.setCharacterSize(50);
 	this->guiText.setString("Test");
+
+	this->endGameText.setFont(this->font);
+	this->endGameText.setFillColor(sf::Color::Red);
+	this->endGameText.setCharacterSize(80);
+	this->endGameText.setPosition(sf::Vector2f(20, 300));
+	this->endGameText.setString("You are dead!");
+
+
+
 }
 
 // Constructor and Destructor
@@ -40,6 +49,10 @@ Game::Game() {
 
 Game::~Game() {
 	delete this->window;
+}
+
+const bool& Game::getEndGame() {
+	return this->endGame;
 }
 
 const bool Game::running() {
@@ -71,11 +84,33 @@ void Game::spawnBalls() {
 	else {
 		if (this->balls.size() < this->maxBalls) {
 
-			this->balls.push_back(Ball(*this->window));
+			this->balls.push_back(Ball(*this->window, this->randBallType()));
 			this->spawnTimer = 0.f;
 		}
 
 	}
+}
+
+const int Game::randBallType() const {
+
+	int type = BallTypes::DEFAULT;
+	int randValue = rand() % 100 + 1;
+
+	if (randValue >= 60 && randValue <= 80)
+		type = BallTypes::DAMAGING;
+
+	else if (randValue > 80 && randValue <= 100)
+		type = BallTypes::HEALING;
+
+	return 0;
+}
+
+void Game::updatePlayer() {
+
+	this->player.update(this->window);
+
+	if (this->player.getHp() <= 0)
+		this->endGame = 0;
 }
 
 void Game::updateCollision() {
@@ -84,8 +119,25 @@ void Game::updateCollision() {
 	for (size_t i = 0; i < this->balls.size(); i++) {
 		if (this->player.getShape().getGlobalBounds().intersects(this->balls[i].getShape().getGlobalBounds())) {
 
+
+			switch (this->balls[i].getType()) {
+
+			case BallTypes::DEFAULT:
+				this->points++;
+				break;
+
+			case BallTypes::DAMAGING:
+				this->player.takeDamage(10);
+				break;
+
+			case BallTypes::HEALING:
+				this->player.gainHealth(1);
+				break;
+
+			}
+
+
 			this->balls.erase(this->balls.begin() + i);
-			this->points++;
 		}
 
 	}
@@ -95,7 +147,8 @@ void Game::updateGui() {
 
 	std::stringstream ss;
 
-	ss << "Points: " << this->points;
+	ss << "Points: " << this->points <<
+		"\nHealth: " << this->player.getHp() << " / " << this->player.getHpMax();
 
 	this->guiText.setString(ss.str());
 }
@@ -103,10 +156,12 @@ void Game::updateGui() {
 void Game::update() {
 	this->pollEvents();
 
-	this->spawnBalls();
-	this->player.update(this->window);
-	this->updateCollision();
-	this->updateGui();
+	if (this->endGame == false) {
+		this->spawnBalls();
+		this->updatePlayer();
+		this->updateCollision();
+		this->updateGui();
+	}
 }
 
 void Game::renderGui(sf::RenderTarget* target) {
@@ -125,6 +180,9 @@ void Game::render() {
 
 	// Render GUI
 	this->renderGui(this->window);
+
+	if (this->endGame)
+		this->window->draw(this->endGameText);
 
 	this->window->display();
 }

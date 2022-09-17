@@ -23,7 +23,16 @@ public:
 	Player(float x = 0.f, float y = 0.f);
 	virtual ~Player();
 
+
+	// Accessors
 	const sf::RectangleShape& getShape();
+	const int& getHp();
+	const int& getHpMax();
+
+
+	// Functions
+	void takeDamage(const int damage);
+	void gainHealth(const int health);
 
 	void updateInput();
 	void updateWindowBoundsCollision(const sf::RenderTarget* target);

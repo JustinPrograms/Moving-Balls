@@ -29,6 +29,7 @@ private:
 
 	sf::Font font;
 	sf::Text guiText;
+	sf::Text endGameText;
 
 	std::vector<Ball> balls;
 	float spawnTimerMax;
@@ -49,6 +50,7 @@ public:
 
 
 	// Accessors
+	const bool& getEndGame();
 
 	// Modifiers
 
@@ -57,6 +59,8 @@ public:
 	void pollEvents();
 
 	void spawnBalls();
+	const int randBallType() const;
+	void updatePlayer();
 	void updateCollision();
 	void updateGui();
 	void update();
